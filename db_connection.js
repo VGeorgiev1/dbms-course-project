@@ -2,7 +2,7 @@ var mysql      = require('mysql');
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
-  database : 'cooking_db'
+  password : 'luchenasupa'
 });
  
 connection.connect(function(err) {
@@ -11,4 +11,8 @@ connection.connect(function(err) {
     return;
   }
   console.log('connected as id ' + connection.threadId);
+});
+connection.query("CREATE DATABASE cooking_db;", function (err, result) {
+    if (err) throw err;
+    console.log("Database created");
 });
