@@ -12,7 +12,12 @@ connection.connect(function(err) {
   }
   console.log('connected as id ' + connection.threadId);
 });
-connection.query("CREATE DATABASE cooking_db;", function (err, result) {
+connection.query("CREATE DATABASE IF NOT EXISTS cooking_db;", function (err, result) {
     if (err) throw err;
-    console.log("Database created");
 });
+connection.query("USE cooking_db;", function (err, result) {
+    if (err) throw err;
+});
+module.exports = {
+    connection
+}

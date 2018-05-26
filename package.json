@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/VGeorgiev1/dbms-course-project#readme",
   "dependencies": {
-    "mysql": "^2.15.0"
+    "express": "^4.16.3",
+    "mysql": "^2.15.0",
+    "pug": "^2.0.3"
   }
 }
