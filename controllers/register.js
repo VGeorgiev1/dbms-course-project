@@ -20,5 +20,4 @@ const utils = {
 }
 module.exports = {
     utils,
-    executeQuery
 }

@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const connection = require('./db_connection.js').connection
+const connection = require('./db/db_connection.js').connection
 const bodyParser = require('body-parser');
 const regcontrollers = require('./controllers/register');
 app.use(bodyParser.urlencoded({ extended: false }))
