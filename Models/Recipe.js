@@ -1,14 +1,14 @@
 const Database = require('./Utils.js')
 const Session = require('./Session.js')
 module.exports =
-class User{
-    constructor(name, password, email){
+class Recipe{
+    constructor(name, instrutions, tags){
         this.name = name;
-        this.password = password,
-        this.Email = email
+        this.instrutions = instrutions,
+        this.tags = tags
     }
-    static create(name, password, email){
-            return new User(name,password,email)
+    static create(name, instrutions, tags){
+            return new Recipe(name,instrutions,email)
     }
     save(){
         Database.execQuery(`INSERT INTO users VALUES (
@@ -17,19 +17,12 @@ class User{
                     "${this.password}")`);
     }
     static find_by(args){
-            let query = "SELECT * FROM users " + Database.find_by_clause(args)
+            let query = "SELECT * FROM recipies " + Database.find_by_clause(args)
             console.log(query)
             return new Promise((resolve, reject) =>{
                 Database.execQuery(query).then((result)=>{
                     resolve(result);
                 })
             })
-    }
-    static async login(args){
-        var user = await User.find_by(args)
-        if(user.length == 1)
-        {
-            return Session.create(user[0].username).token;
-        }
     }
 };

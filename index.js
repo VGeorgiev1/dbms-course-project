@@ -11,7 +11,14 @@ app.use(bodyParser.json())
 app.use(cookieParser());
 app.set('view engine', 'pug')
 app.use(express.static('public'))
-
+var loginware = function (req, res, next) {
+    Session.find_by({token: req.cookies.sessionToken}).then(result => {
+        if(result.length == 1){
+            req.username = result[0].username;
+        }
+    })
+    next()
+}
 app.get('/register', (req, res) => res.render('register'))
 app.post('/register',  (req,res)=> {
     let user = User.create(req.body.username, req.body.password, req.body.Email)
@@ -19,21 +26,16 @@ app.post('/register',  (req,res)=> {
 })
 
 app.get('/login', (req, res) => {
-
-    Session.find_by({token: req.cookies.sessionToken}).then(result => {
-        if(result.length == 1)
-        {
-            res.send(result[0].username  + "string ili nesto takowa");
-        } else {
-            res.render('login')
-        }
-    })
+    if(!req.username) res.render('login')
+})
+app.get('/recipe/create', (req,res)=>{
+    if(!req.username) res.render('login')
+    else res.render('create')
 })  
 app.post('/login',  (req,res)=> {
     let user = User.login({username: req.body.username, password: req.body.password}).then(token =>{
         res.cookie('sessionToken', token);
         res.send(Session.find_by({token: req.cookies.sessionToken}));
-
     }).catch(error => console.log(error));
 })
 
