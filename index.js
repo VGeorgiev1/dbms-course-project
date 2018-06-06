@@ -2,10 +2,8 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
-const User = require('./Models/User.js');
-const Database = require('./Models/Utils')
+const User = require('./Models/User');
 const Session =  require('./Models/Session')
-Database.connect()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cookieParser());
@@ -16,9 +14,10 @@ var loginware = function (req, res, next) {
         if(result.length == 1){
             req.username = result[0].username;
         }
+        next()
     })
-    next()
 }
+app.use(loginware)
 app.get('/register', (req, res) => res.render('register'))
 app.post('/register',  (req,res)=> {
     let user = User.create(req.body.username, req.body.password, req.body.Email)
@@ -27,6 +26,7 @@ app.post('/register',  (req,res)=> {
 
 app.get('/login', (req, res) => {
     if(!req.username) res.render('login')
+    else res.send("You are logged in as " + req.username)
 })
 app.get('/recipe/create', (req,res)=>{
     if(!req.username) res.render('login')

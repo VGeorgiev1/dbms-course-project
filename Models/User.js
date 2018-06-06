@@ -1,35 +1,40 @@
-const Database = require('./Utils.js')
-const Session = require('./Session.js')
+const Session = require('./Session')
+const Model = require('./Model');
 module.exports =
-class User{
+class User extends Model{
     constructor(name, password, email){
+        super();
         this.name = name;
         this.password = password,
         this.Email = email
     }
     static create(name, password, email){
-            return new User(name,password,email)
+        let user = new User(name,password,email);
+        user.save();
+        return user;
     }
     save(){
-        Database.execQuery(`INSERT INTO users VALUES (
-                    "${this.name}",
-                    "${this.Email}",
-                    "${this.password}")`);
+        return super.save(this.name, this.password, this.Email)
     }
     static find_by(args){
-            let query = "SELECT * FROM users " + Database.find_by_clause(args)
-            console.log(query)
-            return new Promise((resolve, reject) =>{
-                Database.execQuery(query).then((result)=>{
-                    resolve(result);
-                })
-            })
+        return Model.findBy(args, this.tableName)
     }
+
+    static get tableName()
+    {
+        return 'users';
+    }
+
     static async login(args){
         var user = await User.find_by(args)
+        console.log(user);
         if(user.length == 1)
         {
             return Session.create(user[0].username).token;
+        }
+        else
+        {
+            throw new Error("User not found or too many");
         }
     }
 };
