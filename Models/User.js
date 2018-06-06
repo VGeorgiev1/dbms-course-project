@@ -1,4 +1,6 @@
 const Database = require('./Utils.js')
+const Session = require('./Session.js')
+module.exports =
 class User{
     constructor(name, password, email){
         this.name = name;
@@ -23,8 +25,13 @@ class User{
                 })
             })
     }
+    static async login(args){
+        var user = await User.find_by(args)
+        if(user.length == 1)
+        {
+            return Session.create(user[0].username).token;
+        }
+        console.log(user);
+    }
 
-};
-module.exports = {
-    User
 };

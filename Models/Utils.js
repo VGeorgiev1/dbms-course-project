@@ -33,6 +33,10 @@ module.exports =
                             ,email VARCHAR(30),
                             password VARCHAR(30))`,function(err,result){
                                 if (err) throw err;})
+        connection.query(`CREATE TABLE IF NOT EXISTS sessions(
+            username VARCHAR(30),
+            token VARCHAR(100))`,function(err,result){
+                if (err) throw err;})
     }
     static execQuery(query){
         return new Promise( ( resolve, reject ) => {
