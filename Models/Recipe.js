@@ -39,4 +39,7 @@ class Recipe extends Model{
     static find_by(args){
         return Model.findBy(args, this.tableName);
     }
+    static find_all(){
+        return Model.findAll(this.tableName);
+    }
 };

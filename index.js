@@ -18,6 +18,14 @@ var loginware = function (req, res, next) {
         next()
     })
 }
+
+app.get('/', (req,res) =>{
+    var recepy = Recipe.find_all().then(result =>{
+        res.render('index', {"recipes": result})
+    })
+})
+
+
 app.use(loginware)
 app.get('/register', (req, res) => res.render('register'))
 app.post('/register',  (req,res)=> {
