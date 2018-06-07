@@ -14,7 +14,10 @@ class Model{
                                         .fill('?')
                                         .join(',')})`, 
                                     this.constructor.columnsNames.concat(values));
+<<<<<<< HEAD
         
+=======
+>>>>>>> 237dfbd0661529714871caf4cccecf840829bebc
         this.id = result.insertId;
         return this
     }
