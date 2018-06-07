@@ -13,25 +13,22 @@ class Query {
         this.where_clauses = where || [];
     }
 
-    inner_join(other, on, columns) {
+    join(type, on, columns) {
         let otherTableName = other.tableName;
         this.select.push(...columns.map(column => toSQLColumn(otherTableName, column)))
         this.joins.push({
-            type: 'INNER',
+            type: type,
             with: otherTableName,
             on: on
         })
         return this
     }
+
+    inner_join(other, on, columns) {
+        return join('INNER', on, columns)
+    }
     left_join(other, on, columns) {
-        let otherTableName = other.tableName;
-        this.select.push(...columns.map(column => toSQLColumn(otherTableName, column)))
-        this.joins.push({
-            type: 'LEFT',
-            with: otherTableName,
-            on: on
-        })
-        return this
+        return join('LEFT', on, columns)
     }
 
     where(args) {
