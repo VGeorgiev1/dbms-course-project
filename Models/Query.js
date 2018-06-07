@@ -31,15 +31,14 @@ class Query {
     }
 
     execute() {
-        console.log(
-            mysql.format(
+            return mysql.format( //TODO
 `
 SELECT ${this.select.join(', ')}
 FROM   ${this.from}
 ${this.joins.map(j => `${j.type} JOIN ${j.with} 
     ON ${toSQLColumn(this.from, j.on[0])} = ${toSQLColumn(j.with, j.on[1])}`).join('\n')}
 WHERE ${Object.keys(this.where_clauses).fill('?? = ?').join(' AND ')};`, 
-[].concat(...Object.entries(this.where_clauses))));
+[].concat(...Object.entries(this.where_clauses)));
     }
 }
 

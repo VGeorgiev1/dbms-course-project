@@ -14,7 +14,6 @@ class Model{
                                         .fill('?')
                                         .join(',')})`, 
                                     this.constructor.columnsNames.concat(values));
-        console.log(result);
         this.id = result.insertId;
         return this
     }
