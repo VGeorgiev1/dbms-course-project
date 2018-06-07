@@ -25,6 +25,7 @@
     "inherits": "^2.0.3",
     "isarray": "^2.0.4",
     "mysql": "^2.15.0",
+    "nodemon": "^1.17.5",
     "pug": "^2.0.3",
     "readable-stream": "^2.3.6",
     "safe-buffer": "^5.1.2",
