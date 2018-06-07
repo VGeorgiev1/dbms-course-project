@@ -1,7 +1,7 @@
 const Model = require('./Model');
 const User = require('./User');
 class Recipe extends Model{
-    constructor(name, description, author){
+    constructor(id,name, description, author){
         super();
         this.id = id
         this.author = author;
@@ -10,14 +10,19 @@ class Recipe extends Model{
         //this.tags = tags;
     }
     static create(author, name, description){
-        let recipe = new Recipe(author,name, description);
+        let recipe = new Recipe(0,author,name, description);
         recipe.save();
         return recipe;
     }
 
     async save(){
-        let user = await User.find_by({username: this.author});
-        super.save(this.name, this.description, user[0].id);
+        User.find_by({username: this.author}).then(user=>{
+           
+            super.save(this.name, this.description, user[0].id);
+        }).catch(err=>{
+            console.log(err)
+        });
+        
         //for(let tag of tags)
        // {
             //tag

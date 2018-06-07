@@ -5,7 +5,7 @@ class User extends Model{
     constructor(id,name, password, email){
         super()
         this.id = id
-        this.name = name;
+        this.username = name;
         this.password = password,
         this.Email = email
     }
@@ -15,7 +15,7 @@ class User extends Model{
         return user
     }
     save(){
-        super.save(this.name,this.password,this.Email)
+        super.save(this.username,this.password,this.Email)
     }
     static get columnsNames(){
         return ['username', 'password', 'email']
@@ -25,11 +25,10 @@ class User extends Model{
     }
     static async login(args){
         var user = await User.find_by(args)
-        console.log(user)
+        
         if(user.length == 1)
         {
-            
-            return Session.create(user[0].name).token;
+            return Session.create(user[0].username).token;
         }
     }
 };

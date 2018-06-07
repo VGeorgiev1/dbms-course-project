@@ -11,12 +11,14 @@ app.use(cookieParser());
 app.set('view engine', 'pug')
 app.use(express.static('public'))
 var loginware = function (req, res, next) {
-    Session.find_by({token: req.cookies.sessionToken}).then(result => {
-        if(result.length == 1){
-            req.username = result[0].username;
+    Session.find_by({token: req.cookies.sessionToken}).then((ses)=>{
+        if(ses.length == 1){
+            
+            req.username = ses[0].username
         }
         next()
     })
+    
 }
 app.use(loginware)
 app.get('/', (req,res) =>{
@@ -45,15 +47,14 @@ app.get('/recipe/create', (req,res)=>{
 app.post('/recipe/create',(req,res)=>{
     if(!req.username) res.redirect('/login')
     else{ 
-        let recipe = Recipe.create(req.username,req.body.name, req.body.description)
+        let recipe = Recipe.create(req.body.name, req.body.description,req.username,)
         res.send("Recipe saved!")
     }
 })
 app.get('/recipe/update/:id', (req, res)=>{
     if(!req.username) res.redirect('/login')
     else{
-        let recipe = Recipe.find_by({id: req.params.id}).then((result)=>{
-            console.log(result)
+        Recipe.find_by({id: req.params.id}).then((result)=>{ 
             res.render('update', {recipe: result[0], id: req.params.id})
         })
     }

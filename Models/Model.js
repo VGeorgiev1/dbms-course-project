@@ -4,13 +4,21 @@ class Model{
         return Model.execQuery(`INSERT INTO ${this.constructor.tableName}(${Array(this.constructor.columnsNames.length).fill('??').join(',')}) VALUES (${Array(values.length).fill('?').join(',')})`, this.constructor.columnsNames.concat(values));
     }
     
-    static find_by(args){
-       // console.log(this)
+    static async find_by(args){
+         console.log(args)
         let sql = `SELECT * FROM ${this.tableName} WHERE ` + Object.keys(args).map(() => {
             return "?? = ?"
         }).join(" AND ")
-        this.execQuery.bind(this)
-        return this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]])))
+        console.log(mysql.format(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]]))))
+        let rows = await this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]]))) 
+        console.log(rows)
+        return new Promise((resolve, reject)=>{
+            let entries = []
+            for(let i=0;i< rows.length;i++){
+                entries.push(new this(...Object.values(rows[i])))
+            }
+            resolve(entries)
+        })
     }
     static find_all(){
         
@@ -26,17 +34,13 @@ class Model{
     static execQuery(query, args) {
         
         return new Promise((resolve, reject) => {
-            console.log(query)
+            
             let request = args ? mysql.format(query, args) : query;
             this.connection.query(request, (err, rows) => {
                 if (err)
                     reject(err);
-                else{
-                    let entries = []
-                    for(let i=0;i< rows.length;i++){
-                        entries.push(new this(...Object.values(rows[i])))
-                    }
-                    resolve(entries);
+                else{ 
+                    resolve(rows);
                 }
             });
         });
@@ -46,7 +50,7 @@ class Model{
 Model.connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root'
+    password: 'luchenasupa'
 });
 
 Model.connection.connect(function (err) {
