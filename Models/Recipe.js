@@ -30,16 +30,6 @@ class Recipe extends Model {
         .catch(err => {
             console.log(err)
         });
-
-        //for(let tag of tags)
-        // {
-        //tag
-        //check if tag exists
-        //tag = find tag
-        //else
-        //create tag
-        //RecipeTagConnection.create(this.id, tag.id)
-        //}
     }
     static get tableName() {
         return 'recipes';
