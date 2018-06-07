@@ -15,7 +15,14 @@ class Recipe extends Model {
         return this
             .query()
             .inner_join(User, ['authorId', 'id'], ['username'])
-            .execute();
+            .inner_join(RecipeTagConnection, ['id', 'recipeID'], ['tagID'])
+            .inner_join(Tag, ['RecipeTagConnections.tagID', 'id'], ['name'])
+            .execute()
+            .then(rows => {
+                this.tags = [];
+                rows.forEach((r) => this.tags.push(r.name))
+                return this
+            });
     }
     static create(author, name, description, tags) {
         let recipe = new Recipe(null, author, name, description, tags);

@@ -4,3 +4,7 @@ html
       p Recipe name: #{recipe.name}
       P Recipe description: #{recipe.description}
       p Recipe author: #{recipe.username}
+      ul Recipe tags :  
+          each val in recipe.tags
+              li=val
+

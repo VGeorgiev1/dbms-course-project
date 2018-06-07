@@ -72,7 +72,7 @@ app.post('/recipe/update/:id', (req,res)=>{
 app.get('/recipe/:id', (req, res) =>{
     var recipe = Recipe.find_by({id: req.params.id})
         .then(result => result[0].populate())
-        .then(populated => res.render('recipe', {recipe: populated[0]}))
+        .then(populated => res.render('recipe', {"recipe": populated}))
         .catch(err => console.log(err))
 })
 app.post('/login',  (req,res)=> {
