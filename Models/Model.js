@@ -32,6 +32,10 @@ class Model{
     static async find_first(args){
         return (await this.find_by(args))[0]
     }
+    static delete(args){
+        let sql = `DELETE FROM ${this.tableName} WHERE ?? = ?`
+        return this.execQuery(sql, ['id',args])
+    }
     static async find(id){
         let sql = `SELECT * FROM ${this.tableName} WHERE ID = ?;`
         
@@ -83,8 +87,8 @@ Model.connection.connect(function (err) {
                             email VARCHAR(30));`)).then(
         Model.execQuery(`CREATE TABLE IF NOT EXISTS sessions(
                             username VARCHAR(30),
-                            token VARCHAR(100));`, )).then(
-        Model.execQuery(`CREATE TABLE IF NOT EXISTS recipes(
+                            id VARCHAR(100));`, )).then(
+    Model.execQuery(`CREATE TABLE IF NOT EXISTS recipes(
                             id INT AUTO_INCREMENT PRIMARY KEY,
                             name VARCHAR(30),
                             description TEXT,
