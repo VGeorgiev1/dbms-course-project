@@ -21,7 +21,7 @@ class Session extends Model{
         return 'sessions';
     }
     static get columnsNames(){
-        return ['username', 'token']
+        return ['username', 'id']
     }
 };
 Object.assign(Session, Model);

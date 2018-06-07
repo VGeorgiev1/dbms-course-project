@@ -11,7 +11,7 @@ app.use(cookieParser());
 app.set('view engine', 'pug')
 app.use(express.static('public'))
 var loginware = function (req, res, next) {
-    Session.find_by({token: req.cookies.sessionToken}).then((ses)=>{
+    Session.find_by({id: req.cookies.sessionToken}).then((ses)=>{
         if(ses.length == 1){
             
             req.username = ses[0].username
@@ -70,11 +70,27 @@ app.post('/recipe/update/:id', (req,res)=>{
         result[0].update()
     })
 })
+app.post('/recipe/update/:id/delete', (req,res)=>{
+    Recipe.find_by({id: req.params.id}).then((result)=>{
+        result[0].update()
+    })
+})
 app.post('/login',  (req,res)=> {
     let user = User.login({username: req.body.username, password: req.body.password}).then(token =>{
         res.cookie('sessionToken', token);
-        res.send(Session.find_by({token: req.cookies.sessionToken}));
+        res.send(Session.find_by({id: req.cookies.sessionToken}));
     }).catch(error => console.log(error));
 })
+
+app.get('/logout',  (req,res)=> {
+    if(req.username){
+        Session.delete(req.cookies.sessionToken);
+        res.clearCookie("sessionToken");
+        res.redirect('/login')
+    } 
+    else res.send("You are not logged")
+})
+
+
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
