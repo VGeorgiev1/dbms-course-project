@@ -1,10 +1,13 @@
 doctype html
 html
-  body
-    table
-      tr
-        td= recipe.name
-        td= recipe.description
-        td= recipe.author
-        td
-          a(href='/recipe/delete/'+recipe.id) delete
+	body
+		p Recipe name: #{recipe.name}
+		P Recipe description: #{recipe.description}
+		p Recipe author: #{recipe.author}
+		ul Recipe tags :  
+			each val in recipe.tags
+				li=val
+	if authorised 
+		form(action='/recipe/delete/'+recipe.id, method='post')
+			p
+				input#submit(type='submit', value='Delete')

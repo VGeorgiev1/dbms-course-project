@@ -13,7 +13,6 @@ app.use(express.static('public'))
 var loginware = function (req, res, next) {
     Session.find_by({id: req.cookies.sessionToken}).then((ses)=>{
         if(ses.length == 1){
-            
             req.username = ses[0].username
         }
         next()
@@ -22,13 +21,9 @@ var loginware = function (req, res, next) {
 }
 app.use(loginware)
 app.get('/', (req,res) =>{
-    if(!req.username) res.redirect('/login')
-    else{
-        var recepy = Recipe.find_all().then(result =>{
-            
+        var recepy = Recipe.find_all().then(result =>{  
             res.render('index', {"recipes": result})
         })
-    }
 })
 app.get('/register', (req, res) => res.render('register'))
 app.post('/register',  (req,res)=> {
@@ -74,13 +69,8 @@ app.post('/recipe/update/:id', (req,res)=>{
 app.get('/recipe/:id', (req, res) =>{
     var recipe = Recipe.find_by({id: req.params.id})
         .then(result => result[0].populate())
-        .then(populated => res.render('recipe', {"recipe": {description: JSON.stringify(populated)}}))
+        .then(populated => res.render('recipe', {"recipe": populated, "authorised": req.username == populated.author}))
         .catch(err => console.log(err))
-})
-app.post('/recipe/update/:id', (req,res)=>{
-    Recipe.find_by({id: req.params.id}).then((result)=>{
-        result[0].update()
-    })
 })
 app.post('/recipe/delete/:id', (req,res)=>{
    Recipe.delete(req.params.id)
