@@ -25,6 +25,15 @@ class Recipe extends Model {
                 return this
             });
     }
+    async update() {
+        let sql = `DELETE FROM RecipeTagConnections WHERE recipeID = ?`;
+        await Model.execQuery(sql, [this.id])
+        await Promise.all(this.tags.map(async tagName => {
+            let tag = await Tag.create(tagName)
+            let connection = await RecipeTagConnection.create(this.id, tag.id)
+        }));
+        return super.update({name: this.name, description: this.description})
+    }
     static create(author, name, description, tags) {
         let recipe = new Recipe(null, author, name, description, tags);
         recipe.save();

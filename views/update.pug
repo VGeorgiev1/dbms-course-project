@@ -13,6 +13,9 @@ html(lang='en')
         label.floatLabel(for='Descrtion') Dedcription
         textarea#username(name="description",  style="width: 100%; height: 100px")=recipe.description
       p
+        label.floatLabel(for='tags') tags
+        input#tags(name='tags', type='text', value=recipe.tags.join(', '))
+      p
         input#submit(type='submit', value='Edit')
     script(src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js')
     

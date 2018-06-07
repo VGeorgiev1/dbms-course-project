@@ -54,17 +54,27 @@ app.post('/recipe/create',(req,res)=>{
 app.get('/recipe/update/:id', (req, res)=>{
     if(!req.username) res.redirect('/login')
     else{
-        Recipe.find_by({id: req.params.id}).then((result)=>{ 
-            res.render('update', {recipe: result[0], id: req.params.id})
+        Recipe.find_by({id: req.params.id}).then((result)=>{
+            return result[0].populate()
+        }).then(populated=>{
+            res.render('update', {recipe: populated, id: req.params.id})
         })
     }
 })
 app.post('/recipe/update/:id', (req,res)=>{
-    Recipe.find_by({id: req.params.id}).then((result)=>{
-        result[0].update({name: req.body.name, description: req.body.description}).then(()=>{
-            res.send("Recipe updated successfuly!")
-        }).catch(err=>console.log(err))
-    }).catch(err=>console.log(err))    
+    Recipe.find_by({id: req.params.id}).then((results)=>{
+        let recipe = results[0];
+        recipe.name = req.body.name;
+        recipe.description = req.body.description;
+        recipe.tags = req.body.tags
+            .split(',')
+            .map(s => s.trim())
+            .filter(t => t !== '')
+            .map(t => t.toLowerCase());
+        return recipe.update()
+    }).then(()=>{
+        res.send("Recipe updated successfuly!")
+    }).catch(err=>console.log(err))
 })
 app.get('/recipe/:id', (req, res) =>{
     var recipe = Recipe.find_by({id: req.params.id})
