@@ -61,8 +61,10 @@ app.get('/recipe/update/:id', (req, res)=>{
 })
 app.post('/recipe/update/:id', (req,res)=>{
     Recipe.find_by({id: req.params.id}).then((result)=>{
-        result[0].update()
-    })
+        result[0].update({name: req.body.name, description: req.body.description}).then(()=>{
+            res.send("Recipe updated successfuly!")
+        }).catch(err=>console.log(err))
+    }).catch(err=>console.log(err))
 })
 app.post('/login',  (req,res)=> {
     let user = User.login({username: req.body.username, password: req.body.password}).then(token =>{

@@ -14,7 +14,6 @@ class Recipe extends Model{
         recipe.save();
         return recipe;
     }
-
     async save(){
         User.find_by({username: this.author}).then(user=>{
            
