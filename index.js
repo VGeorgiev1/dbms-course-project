@@ -15,6 +15,7 @@ var loginware = function (req, res, next) {
         if(result.length == 1){
             req.username = result[0].username;
         }
+        
         next()
     })
 }
@@ -30,16 +31,20 @@ app.get('/login', (req, res) => {
     else res.send("You are logged in as " + req.username)
 })
 app.get('/recipe/create', (req,res)=>{
-    if(!req.username) res.render('login')
+    if(!req.username) res.redirect('/login');
     else res.render('create')
 })
 app.post('/recipe/create',(req,res)=>{
-    if(!req.username) {
-        res.render('login')
-    }
+    if(!req.username) res.redirect('/login')
     else{ 
         let recipe = Recipe.create(req.username,req.body.name, req.body.description)
         res.send("Recipe saved!")
+    }
+})
+app.get('/recipe/update/:id', (req, res)=>{
+    if(!req.username) res.redirect('/login')
+    else{
+        let recipe = Recipe.find_by({id: req.params.id})
     }
 })
 app.post('/login',  (req,res)=> {
