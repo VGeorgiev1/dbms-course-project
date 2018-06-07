@@ -22,7 +22,6 @@ class Model{
         let sql = `SELECT * FROM ${this.tableName} WHERE ` + Object.keys(args).map(() => {
             return "?? = ?"
         }).join(" AND ")
-        
         let rows = await this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]]))) 
         let entries = []
         for(let i=0;i< rows.length;i++){
