@@ -1,0 +1,18 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    link(rel='stylesheet', href='/regstyle.css')
+  body
+    form(action='/recipe/create', method='post')
+      h2 Submit your recipe:
+      p
+        label.floatLabel(for='Name') Name
+        input#name(name='name', type='text')
+      p
+        label.floatLabel(for='Descrtion') Description
+        textarea#username(name="description",  style="width: 100%; height: 100px")
+      p
+        input#submit(type='submit', value='Create My Account')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+    

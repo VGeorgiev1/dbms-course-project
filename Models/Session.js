@@ -23,5 +23,7 @@ class Session extends Model{
     {
         return 'sessions';
     }
-
+    static get columnsNames(){
+        return ['username', 'token']
+    }
 };

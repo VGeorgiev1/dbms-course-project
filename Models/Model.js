@@ -1,7 +1,7 @@
 const mysql = require('mysql')
 class Model{
     save(...values){
-        return Model.execQuery(`INSERT INTO ${this.constructor.tableName} VALUES (${Array(values.length).fill('?').join(',')})`, values);
+        return Model.execQuery(`INSERT INTO ${this.constructor.tableName}(${Array(this.constructor.columnsNames.length).fill('??').join(',')}) VALUES (${Array(values.length).fill('?').join(',')})`, this.constructor.columnsNames.concat(values));
     }
     
     static findBy(args, tableName){
@@ -39,12 +39,21 @@ Model.connection.connect(function (err) {
     Model.execQuery("CREATE DATABASE IF NOT EXISTS cooking_db;").then(
     Model.execQuery("USE cooking_db;")).then(
     Model.execQuery(`CREATE TABLE IF NOT EXISTS users(
+                            id INT AUTO_INCREMENT PRIMARY KEY,
                             username VARCHAR(30),
-                            email VARCHAR(30),
-                            password VARCHAR(30));`)).then(
+                            password VARCHAR(30),
+                            email VARCHAR(30));`)).then(
     Model.execQuery(`CREATE TABLE IF NOT EXISTS sessions(
                             username VARCHAR(30),
-                            token VARCHAR(100));`, )).catch(err => console.log("Creation error", err))
+                            token VARCHAR(100));`, )).then(
+    Model.execQuery(`CREATE TABLE IF NOT EXISTS recipes(
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            name VARCHAR(30),
+                            description TEXT,
+                            authorID INT NOT NULL,
+                            FOREIGN KEY (authorID) REFERENCES users(id)
+                            ON DELETE CASCADE);`                            
+                            )).catch(err => console.log("Creation error", err))
 });
 
 
