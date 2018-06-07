@@ -4,25 +4,44 @@ class Model{
         return Model.execQuery(`INSERT INTO ${this.constructor.tableName}(${Array(this.constructor.columnsNames.length).fill('??').join(',')}) VALUES (${Array(values.length).fill('?').join(',')})`, this.constructor.columnsNames.concat(values));
     }
     
-    static find_by(args){
+    static async find_by(args){
+         console.log(args)
         let sql = `SELECT * FROM ${this.tableName} WHERE ` + Object.keys(args).map(() => {
             return "?? = ?"
         }).join(" AND ")
-        return this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]])))
+        console.log(mysql.format(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]]))))
+        let rows = await this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]]))) 
+        console.log(rows)
+        return new Promise((resolve, reject)=>{
+            let entries = []
+            for(let i=0;i< rows.length;i++){
+                entries.push(new this(...Object.values(rows[i])))
+            }
+            resolve(entries)
+        })
     }
     static find_all(){
+        
         let sql = `SELECT * FROM ${this.tableName}`
         return this.execQuery(sql)
     }
+    update(args){
+        let sql = `UPDATE ${this.constructor.tableName} SET ` + Object.keys(args).map(() => {
+            return "?? = ?"
+        }).join(", ") + `WHERE id =`
+        return this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]])))
+    }
     static execQuery(query, args) {
+        
         return new Promise((resolve, reject) => {
+            
             let request = args ? mysql.format(query, args) : query;
-            console.log(request)
             this.connection.query(request, (err, rows) => {
                 if (err)
                     reject(err);
-                else
+                else{ 
                     resolve(rows);
+                }
             });
         });
     }

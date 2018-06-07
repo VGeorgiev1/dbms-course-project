@@ -4,7 +4,7 @@ const Crypto =  require('crypto')
 class Session extends Model{
     constructor(name , token){
         super();
-        this.name = name;
+        this.username = name;
         this.token = token;
     }
     static create(name){
@@ -13,7 +13,7 @@ class Session extends Model{
         return session;
     }
     save(){
-        return super.save(this.name, this.token)
+        return super.save(this.username, this.token)
     }
 
     static get tableName()

@@ -11,12 +11,14 @@ app.use(cookieParser());
 app.set('view engine', 'pug')
 app.use(express.static('public'))
 var loginware = function (req, res, next) {
-    Session.find_by({token: req.cookies.sessionToken}).then(result => {
-        if(result.length == 1){
-            req.username = result[0].username;
+    Session.find_by({token: req.cookies.sessionToken}).then((ses)=>{
+        if(ses.length == 1){
+            
+            req.username = ses[0].username
         }
         next()
     })
+    
 }
 app.use(loginware)
 app.get('/recipe/:id', (req, res) =>{
@@ -28,7 +30,12 @@ app.get('/recipe/:id', (req, res) =>{
 app.get('/', (req,res) =>{
     if(!req.username) res.redirect('/login')
     else{
+<<<<<<< HEAD
         var recipe = Recipe.find_all().then(result =>{
+=======
+        var recepy = Recipe.find_all().then(result =>{
+            console.log(result)
+>>>>>>> d218620c35d10c252453a74fe8f676356c6ec9a2
             res.render('index', {"recipes": result})
         })
     }
@@ -50,18 +57,22 @@ app.get('/recipe/create', (req,res)=>{
 app.post('/recipe/create',(req,res)=>{
     if(!req.username) res.redirect('/login')
     else{ 
-        let recipe = Recipe.create(req.username,req.body.name, req.body.description)
+        let recipe = Recipe.create(req.body.name, req.body.description,req.username,)
         res.send("Recipe saved!")
     }
 })
 app.get('/recipe/update/:id', (req, res)=>{
     if(!req.username) res.redirect('/login')
     else{
-        let recipe = Recipe.find_by({id: req.params.id}).then((result)=>{
-            console.log(result)
-            res.render('update', {recipe: result[0]})
+        Recipe.find_by({id: req.params.id}).then((result)=>{ 
+            res.render('update', {recipe: result[0], id: req.params.id})
         })
     }
+})
+app.post('/recipe/update/:id', (req,res)=>{
+    Recipe.find_by({id: req.params.id}).then((result)=>{
+        result[0].update()
+    })
 })
 app.post('/login',  (req,res)=> {
     let user = User.login({username: req.body.username, password: req.body.password}).then(token =>{
