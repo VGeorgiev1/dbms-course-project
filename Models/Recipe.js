@@ -1,8 +1,9 @@
 const Model = require('./Model');
 const User = require('./User');
 class Recipe extends Model{
-    constructor(author, name, description){
+    constructor(name, description, author){
         super();
+        this.id = id
         this.author = author;
         this.name = name;
         this.description = description;

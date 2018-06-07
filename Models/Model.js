@@ -5,24 +5,39 @@ class Model{
     }
     
     static find_by(args){
+       // console.log(this)
         let sql = `SELECT * FROM ${this.tableName} WHERE ` + Object.keys(args).map(() => {
             return "?? = ?"
         }).join(" AND ")
+        this.execQuery.bind(this)
         return this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]])))
     }
     static find_all(){
+        
         let sql = `SELECT * FROM ${this.tableName}`
         return this.execQuery(sql)
     }
+    update(args){
+        let sql = `UPDATE ${this.constructor.tableName} SET ` + Object.keys(args).map(() => {
+            return "?? = ?"
+        }).join(", ") + `WHERE id =`
+        return this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]])))
+    }
     static execQuery(query, args) {
+        
         return new Promise((resolve, reject) => {
+            console.log(query)
             let request = args ? mysql.format(query, args) : query;
-            console.log(request)
             this.connection.query(request, (err, rows) => {
                 if (err)
                     reject(err);
-                else
-                    resolve(rows);
+                else{
+                    let entries = []
+                    for(let i=0;i< rows.length;i++){
+                        entries.push(new this(...Object.values(rows[i])))
+                    }
+                    resolve(entries);
+                }
             });
         });
     }
@@ -31,7 +46,7 @@ class Model{
 Model.connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'luchenasupa'
+    password: 'root'
 });
 
 Model.connection.connect(function (err) {

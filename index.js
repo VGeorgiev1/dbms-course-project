@@ -23,6 +23,7 @@ app.get('/', (req,res) =>{
     if(!req.username) res.redirect('/login')
     else{
         var recepy = Recipe.find_all().then(result =>{
+            console.log(result)
             res.render('index', {"recipes": result})
         })
     }
@@ -53,9 +54,14 @@ app.get('/recipe/update/:id', (req, res)=>{
     else{
         let recipe = Recipe.find_by({id: req.params.id}).then((result)=>{
             console.log(result)
-            res.render('update', {recipe: result[0]})
+            res.render('update', {recipe: result[0], id: req.params.id})
         })
     }
+})
+app.post('/recipe/update/:id', (req,res)=>{
+    Recipe.find_by({id: req.params.id}).then((result)=>{
+        result[0].update()
+    })
 })
 app.post('/login',  (req,res)=> {
     let user = User.login({username: req.body.username, password: req.body.password}).then(token =>{

@@ -4,7 +4,7 @@ html(lang='en')
     meta(charset='UTF-8')
     link(rel='stylesheet', href='/regstyle.css')
   body
-    form(action='/recipe/create', method='post')
+    form(action=`/recipe/update/${id}`, method='post')
       h2 = Update ypur recipe
       p
         label.floatLabel(for='Name') Name
