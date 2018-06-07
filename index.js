@@ -82,6 +82,10 @@ app.post('/recipe/update/:id', (req,res)=>{
         result[0].update()
     })
 })
+app.post('/recipe/delete/:id', (req,res)=>{
+   Recipe.delete(req.params.id)
+   res.redirect('/')
+})
 app.post('/login',  (req,res)=> {
     let user = User.login({username: req.body.username, password: req.body.password}).then(token =>{
         res.cookie('sessionToken', token);
