@@ -10,6 +10,10 @@ class Model{
         }).join(" AND ")
         return this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]])))
     }
+    static findAll(tableName){
+        let sql = `SELECT * FROM ${tableName}`
+        return this.execQuery(sql)
+    }
     static execQuery(query, args) {
         return new Promise((resolve, reject) => {
             let request = args ? mysql.format(query, args) : query;

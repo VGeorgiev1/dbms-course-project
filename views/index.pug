@@ -1,0 +1,10 @@
+html
+	head
+		title= 'Person List'
+	body
+	table
+		for recipe in recipes
+			tr
+				td
+					a(href='/recipe/'+recipe.id) #{recipe.name}
+				td= recipe.authorID
