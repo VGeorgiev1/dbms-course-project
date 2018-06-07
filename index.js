@@ -19,10 +19,16 @@ var loginware = function (req, res, next) {
     })
 }
 app.use(loginware)
+app.get('/recipe/:id', (req, res) =>{
+    var recipe = Recipe.find_by({id: req.params.id}).then(result =>{
+        console.log(result)
+        res.render('recipe', {"recipe": result})
+    })
+})
 app.get('/', (req,res) =>{
     if(!req.username) res.redirect('/login')
     else{
-        var recepy = Recipe.find_all().then(result =>{
+        var recipe = Recipe.find_all().then(result =>{
             res.render('index', {"recipes": result})
         })
     }
