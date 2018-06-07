@@ -1,6 +1,5 @@
 const Model = require('./Model');
 const User = require('./User');
-module.exports =
 class Recipe extends Model{
     constructor(author, name, description){
         super();
@@ -36,10 +35,6 @@ class Recipe extends Model{
     static get columnsNames(){
         return ['name', 'description', 'authorId']
     }
-    static find_by(args){
-        return Model.findBy(args, this.tableName);
-    }
-    static find_all(){
-        return Model.findAll(this.tableName);
-    }
 };
+Object.assign(Recipe, Model);
+module.exports = Recipe

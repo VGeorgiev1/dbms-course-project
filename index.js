@@ -15,19 +15,18 @@ var loginware = function (req, res, next) {
         if(result.length == 1){
             req.username = result[0].username;
         }
-        
         next()
     })
 }
-
-app.get('/', (req,res) =>{
-    var recepy = Recipe.find_all().then(result =>{
-        res.render('index', {"recipes": result})
-    })
-})
-
-
 app.use(loginware)
+app.get('/', (req,res) =>{
+    if(!req.username) res.redirect('/login')
+    else{
+        var recepy = Recipe.find_all().then(result =>{
+            res.render('index', {"recipes": result})
+        })
+    }
+})
 app.get('/register', (req, res) => res.render('register'))
 app.post('/register',  (req,res)=> {
     let user = User.create(req.body.username, req.body.password, req.body.Email)
@@ -52,7 +51,10 @@ app.post('/recipe/create',(req,res)=>{
 app.get('/recipe/update/:id', (req, res)=>{
     if(!req.username) res.redirect('/login')
     else{
-        let recipe = Recipe.find_by({id: req.params.id})
+        let recipe = Recipe.find_by({id: req.params.id}).then((result)=>{
+            console.log(result)
+            res.render('update', {recipe: result[0]})
+        })
     }
 })
 app.post('/login',  (req,res)=> {

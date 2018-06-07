@@ -1,6 +1,6 @@
 const Model = require('./Model');
 const Crypto =  require('crypto')
-module.exports =
+
 class Session extends Model{
     constructor(name , token){
         super();
@@ -15,9 +15,6 @@ class Session extends Model{
     save(){
         return super.save(this.name, this.token)
     }
-    static find_by(args){
-        return Model.findBy(args, this.tableName)
-    }
 
     static get tableName()
     {
@@ -27,3 +24,5 @@ class Session extends Model{
         return ['username', 'token']
     }
 };
+Object.assign(Session, Model);
+module.exports = Session
