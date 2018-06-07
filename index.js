@@ -72,10 +72,10 @@ app.post('/recipe/update/:id', (req,res)=>{
     }).catch(err=>console.log(err))    
 })
 app.get('/recipe/:id', (req, res) =>{
-    var recipe = Recipe.find_by({id: req.params.id}).then(result =>{
-        
-        res.render('recipe', {"recipe": result[0]})
-    })
+    var recipe = Recipe.find_by({id: req.params.id})
+        .then(result => result[0].populate())
+        .then(populated => res.render('recipe', {"recipe": {description: JSON.stringify(populated)}}))
+        .catch(err => console.log(err))
 })
 app.post('/recipe/update/:id', (req,res)=>{
     Recipe.find_by({id: req.params.id}).then((result)=>{
