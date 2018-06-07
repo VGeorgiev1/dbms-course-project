@@ -77,7 +77,7 @@ app.get('/recipe/:id', (req, res) =>{
         res.render('recipe', {"recipe": result[0]})
     })
 })
-app.post('/recipe/update/:id/delete', (req,res)=>{
+app.post('/recipe/update/:id', (req,res)=>{
     Recipe.find_by({id: req.params.id}).then((result)=>{
         result[0].update()
     })
