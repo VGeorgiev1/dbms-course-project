@@ -1,4 +1,3 @@
-const Model = require('./Model')
 const mysql = require('mysql');
 function toSQLColumn(table, column) {
     if(column.includes('.'))
@@ -7,11 +6,11 @@ function toSQLColumn(table, column) {
 }
 
 class Query {
-    constructor(select, from) {
+    constructor(select, from, where) {
         this.select = select.map(column => toSQLColumn(from, column));
         this.from = from;
         this.joins = [];
-        this.where_clauses = [];
+        this.where_clauses = where || [];
     }
 
     inner_join(other, on, columns) {
@@ -31,14 +30,15 @@ class Query {
     }
 
     execute() {
-            return mysql.format( //TODO
-`
+        let query = `
 SELECT ${this.select.join(', ')}
 FROM   ${this.from}
 ${this.joins.map(j => `${j.type} JOIN ${j.with} 
     ON ${toSQLColumn(this.from, j.on[0])} = ${toSQLColumn(j.with, j.on[1])}`).join('\n')}
-WHERE ${Object.keys(this.where_clauses).fill('?? = ?').join(' AND ')};`, 
-[].concat(...Object.entries(this.where_clauses)));
+WHERE ${Object.keys(this.where_clauses).fill('?? = ?').join(' AND ')};`;
+        let args = [].concat(...Object.entries(this.where_clauses));
+        console.log(query, args)
+        return require('./Model').execQuery(query, args);
     }
 }
 

@@ -11,6 +11,12 @@ class Recipe extends Model {
         this.description = description;
         this.tags = tags;
     }
+    populate() {
+        return this
+            .query()
+            .inner_join(User, ['authorId', 'id'], ['username'])
+            .execute();
+    }
     static create(author, name, description, tags) {
         let recipe = new Recipe(null, author, name, description, tags);
         recipe.save();

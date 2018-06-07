@@ -3,7 +3,9 @@ const Query = require('./Query')
 class Model{
     query()
     {
-        return new Query(this.constructor.columnsNames, this.constructor.tableName);
+        let tableName = this.constructor.tableName;
+        let idCol = `${tableName}.id`
+        return new Query(this.constructor.columnsNames, tableName, {[idCol]: this.id});
     }
     async save(...values){
         let result = await Model.execQuery(`INSERT INTO ${this.constructor.tableName}
