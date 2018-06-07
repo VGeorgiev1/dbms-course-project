@@ -21,12 +21,6 @@ var loginware = function (req, res, next) {
     
 }
 app.use(loginware)
-app.get('/recipe/view/:id', (req, res) =>{
-    var recipe = Recipe.find_by({id: req.params.id}).then(result =>{
-        console.log(result)
-        res.render('recipe', {"recipe": result[0]})
-    })
-})
 app.get('/', (req,res) =>{
     if(!req.username) res.redirect('/login')
     else{
@@ -50,10 +44,15 @@ app.get('/recipe/create', (req,res)=>{
     if(!req.username) res.redirect('/login');
     else res.render('create')
 })
-app.post('/recipe/create',(req,res)=>{
+app.post('/recipe/create',(req,res)=>{                
     if(!req.username) res.redirect('/login')
     else{ 
-        let recipe = Recipe.create(req.body.name, req.body.description,req.username,)
+        let recipe = Recipe.create(req.body.name, req.body.description, req.username,
+                        req.body.tags
+                        .split(',')
+                        .map(s => s.trim())
+                        .filter(t => t !== '')
+                        .map(t => t.toLowerCase()))
         res.send("Recipe saved!")
     }
 })
@@ -67,7 +66,15 @@ app.get('/recipe/update/:id', (req, res)=>{
 })
 app.post('/recipe/update/:id', (req,res)=>{
     Recipe.find_by({id: req.params.id}).then((result)=>{
-        result[0].update()
+        result[0].update({name: req.body.name, description: req.body.description}).then(()=>{
+            res.send("Recipe updated successfuly!")
+        }).catch(err=>console.log(err))
+    }).catch(err=>console.log(err))    
+})
+app.get('/recipe/:id', (req, res) =>{
+    var recipe = Recipe.find_by({id: req.params.id}).then(result =>{
+        console.log(result)
+        res.render('recipe', {"recipe": result[0]})
     })
 })
 app.post('/recipe/update/:id/delete', (req,res)=>{
