@@ -3,7 +3,9 @@ const Query = require('./Query')
 class Model{
     query()
     {
-        return new Query(this.constructor.columnsNames, this.constructor.tableName);
+        let tableName = this.constructor.tableName;
+        let idCol = `${tableName}.id`
+        return new Query(this.constructor.columnsNames, tableName, {[idCol]: this.id});
     }
     async save(...values){
         let result = await Model.execQuery(`INSERT INTO ${this.constructor.tableName}
@@ -14,7 +16,7 @@ class Model{
                                         .fill('?')
                                         .join(',')})`, 
                                     this.constructor.columnsNames.concat(values));
-        console.log(result);
+        
         this.id = result.insertId;
         return this
     }
@@ -22,7 +24,6 @@ class Model{
         let sql = `SELECT * FROM ${this.tableName} WHERE ` + Object.keys(args).map(() => {
             return "?? = ?"
         }).join(" AND ")
-        
         let rows = await this.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]]))) 
         let entries = []
         for(let i=0;i< rows.length;i++){
@@ -52,6 +53,10 @@ class Model{
             return "?? = ?"
         }).join(", ") + ` WHERE id =${this.id}`
         return Model.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]])))
+    }
+    delete(){
+        let sql = `DELETE FROM ${this.constructor.tableName} WHERE ?? = ?`
+        return this.execQuery(sql, ['id',this.id])
     }
     static execQuery(query, args) {
         return new Promise((resolve, reject) => {

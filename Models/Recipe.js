@@ -11,6 +11,12 @@ class Recipe extends Model {
         this.description = description;
         this.tags = tags;
     }
+    populate() {
+        return this
+            .query()
+            .inner_join(User, ['authorId', 'id'], ['username'])
+            .execute();
+    }
     static create(author, name, description, tags) {
         let recipe = new Recipe(null, author, name, description, tags);
         recipe.save();
@@ -30,16 +36,6 @@ class Recipe extends Model {
         .catch(err => {
             console.log(err)
         });
-
-        //for(let tag of tags)
-        // {
-        //tag
-        //check if tag exists
-        //tag = find tag
-        //else
-        //create tag
-        //RecipeTagConnection.create(this.id, tag.id)
-        //}
     }
     static get tableName() {
         return 'recipes';
