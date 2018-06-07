@@ -16,6 +16,7 @@ class Model{
                                         .fill('?')
                                         .join(',')})`, 
                                     this.constructor.columnsNames.concat(values));
+        
         this.id = result.insertId;
         return this
     }
@@ -53,6 +54,10 @@ class Model{
             return "?? = ?"
         }).join(", ") + ` WHERE id =${this.id}`
         return Model.execQuery(sql, [].concat(...Object.keys(args).map((key) => [key, args[key]])))
+    }
+    delete(){
+        let sql = `DELETE FROM ${this.constructor.tableName} WHERE ?? = ?`
+        return this.execQuery(sql, ['id',this.id])
     }
     static execQuery(query, args) {
         return new Promise((resolve, reject) => {

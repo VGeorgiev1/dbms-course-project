@@ -25,7 +25,7 @@ app.get('/', (req,res) =>{
     if(!req.username) res.redirect('/login')
     else{
         var recepy = Recipe.find_all().then(result =>{
-            console.log(result)
+            
             res.render('index', {"recipes": result})
         })
     }
