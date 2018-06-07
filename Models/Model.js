@@ -1,5 +1,10 @@
 const mysql = require('mysql')
+const Query = require('./Query')
 class Model{
+    query()
+    {
+        return new Query(this.constructor.columnsNames, this.constructor.tableName);
+    }
     async save(...values){
         let result = await Model.execQuery(`INSERT INTO ${this.constructor.tableName}
                                     (${Array(this.constructor.columnsNames.length)
