@@ -15,12 +15,13 @@ class Recipe extends Model {
         return this
             .query()
             .inner_join(User, ['authorId', 'id'], ['username'])
-            .inner_join(RecipeTagConnection, ['id', 'recipeID'], ['tagID'])
-            .inner_join(Tag, ['RecipeTagConnections.tagID', 'id'], ['name'])
+            .left_join(RecipeTagConnection, ['id', 'recipeID'], ['tagID'])
+            .left_join(Tag, ['RecipeTagConnections.tagID', 'id'], ['name'])
             .execute()
             .then(rows => {
                 this.tags = [];
                 rows.forEach((r) => this.tags.push(r.name))
+                this.author = rows[0].username
                 return this
             });
     }

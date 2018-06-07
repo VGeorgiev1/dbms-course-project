@@ -23,6 +23,16 @@ class Query {
         })
         return this
     }
+    left_join(other, on, columns) {
+        let otherTableName = other.tableName;
+        this.select.push(...columns.map(column => toSQLColumn(otherTableName, column)))
+        this.joins.push({
+            type: 'LEFT',
+            with: otherTableName,
+            on: on
+        })
+        return this
+    }
 
     where(args) {
         Object.assign(this.where_clauses, args)
