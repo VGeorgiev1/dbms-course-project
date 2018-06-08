@@ -44,7 +44,6 @@ ${this.joins.map(j => `${j.type} JOIN ${j.with}
     ON ${toSQLColumn(this.from, j.on[0])} = ${toSQLColumn(j.with, j.on[1])}`).join('\n')}
 WHERE ${Object.keys(this.where_clauses).fill('?? = ?').join(' AND ')};`;
         let args = [].concat(...Object.entries(this.where_clauses));
-        console.log(query, args)
         return require('./Model').execQuery(query, args);
     }
 }

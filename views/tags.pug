@@ -1,0 +1,9 @@
+doctype html
+html
+	body 
+		each tag in tags
+			li=tag.name
+			form(action='/tag/delete/'+tag.id, method='post')
+				input#submit(type='submit', value='Delete')
+			button
+				a(href='/tag/update/'+tag.id) Update

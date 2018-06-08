@@ -61,6 +61,7 @@ class Model{
     static execQuery(query, args) {
         return new Promise((resolve, reject) => {
             let request = args ? mysql.format(query, args) : query;
+            console.log(request)
             this.connection.query(request, (err, rows) => {
                 if (err)
                     reject(err);

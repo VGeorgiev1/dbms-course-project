@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const User = require('./Models/User');
 const Session =  require('./Models/Session')
 const Recipe = require('./Models/Recipe')
+const Tag = require('./Models/Tag')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cookieParser());
@@ -85,6 +86,15 @@ app.get('/recipe/:id', (req, res) =>{
 app.post('/recipe/delete/:id', (req,res)=>{
    Recipe.delete(req.params.id)
    res.redirect('/')
+})
+app.get('/tags',(req, res)=>{
+    Tag.find_all().then((tags)=>{
+        res.render('tags', {"tags": tags})
+    })
+})
+app.post('/tag/delete/:id',(req,res)=>{
+    Tag.delete(req.params.id)
+    res.redirect('/tags')
 })
 app.post('/login',  (req,res)=> {
     let user = User.login({username: req.body.username, password: req.body.password}).then(token =>{
