@@ -1,16 +1,16 @@
 const Model = require('./Model')
 const Session = require('./Session.js')
-
+const bcrypt = require('bcrypt')
 class User extends Model{
     constructor(id,name, password, email){
         super()
         this.id = id
         this.username = name;
-        this.password = password,
+        this.password = password;
         this.Email = email
     }
-    static create(name, password, email){
-        let user = new User(0,name,password,email)
+    static async create(name, password, email){
+        let user = await new User(0,name,await bcrypt.hash(password, 10),email)
         user.save()
         return user
     }
@@ -23,13 +23,18 @@ class User extends Model{
     static get tableName(){
         return 'users'
     }
-    static async login(args){
-        var user = await User.find_by(args)
-        
+    static async login(username, password){
+        let user = await User.find_by({username})
         if(user.length == 1)
         {
-            return Session.create(user[0].username).token;
+            let authenticated = await bcrypt.compare(password, user[0].password);
+            if(authenticated)
+                return Session.create(user[0].username).token;
+            else
+                throw Error("password not match")
         }
+        else
+            throw Error("not implementeduser not found")
     }
 };
 Object.assign(User, Model);

@@ -31,9 +31,8 @@ app.get('/', (req,res) =>{
 
 app.get('/register', (req, res) => res.render('register'))
 
-app.post('/register',  (req,res)=> {
-    let user = User.create(req.body.username, req.body.password, req.body.Email)
-    res.send("You just registered!")
+app.post('/register', (req,res)=> {
+    User.create(req.body.username, req.body.password, req.body.Email).then(()=>res.send("You just registered!")).catch(err=>console.log(err))
 })
 
 app.get('/login', (req, res) => {
@@ -110,7 +109,7 @@ app.post('/tag/delete/:id',(req,res)=>{
 })
 
 app.post('/login',  (req,res)=> {
-    let user = User.login({username: req.body.username, password: req.body.password}).then(token =>{
+    let user = User.login(req.body.username, req.body.password).then(token =>{
         res.cookie('sessionToken', token);
         res.send(Session.find_by({id: req.cookies.sessionToken}));
     }).catch(error => console.log(error));
