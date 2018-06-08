@@ -138,4 +138,13 @@ app.get('/me', (req, res) =>{
     else res.send("You are not logged")
 })
 
+app.post('/me/delete/:id', (req, res) =>{
+    if(req.username)
+    {
+        User.delete(req.params.id).then(() =>{
+            res.redirect('/logout')
+        })
+    }
+})
+
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
