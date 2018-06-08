@@ -1,0 +1,13 @@
+doctype html
+html
+	body
+		p #{user.username}
+		p Recipes: #{recipes.length}
+		table
+			for recipe in recipes
+				tr
+					td
+						a(href='/recipe/'+recipe.id) #{recipe.name}
+		form(action='/me/delete/'+user.id, method='post')
+			p
+				input#submit(type='submit', value='Delete')
