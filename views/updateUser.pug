@@ -1,0 +1,26 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    link(rel='stylesheet', href='/regstyle.css')
+  body
+    form(action='settings', method='post')
+      h2 Sign Up
+      p
+        label.floatLabel(for='Email') Email
+        input#Email(name='Email', type='text' value=Email)
+      p
+        label.floatLabel(for='Username') Username
+        input#username(name='username', type='text', value=username)
+      p
+        label.floatLabel(for='password') Password
+        input#password(name='password', type='password')
+        span Enter a password longer than 8 characters
+      p
+        label.floatLabel(for='confirm_password') Confirm Password
+        input#confirm_password(name='confirm_password', type='password')
+        span Your passwords do not match
+      p
+        input#submit(type='submit', value='Create My Account')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+    script(src='regform.js')

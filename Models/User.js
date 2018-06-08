@@ -6,11 +6,11 @@ class User extends Model{
         super()
         this.id = id
         this.username = name;
-        this.password = password;
+        this.password = bcrypt.hashSync(password, 10);
         this.Email = email
     }
     static async create(name, password, email){
-        let user = await new User(0,name,await bcrypt.hash(password, 10),email)
+        let user = new User(0,name,password,email)
         user.save()
         return user
     }

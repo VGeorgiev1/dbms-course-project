@@ -29,10 +29,12 @@ app.get('/', (req,res) =>{
         })
 })
 
+
 app.get('/register', (req, res) => res.render('register'))
 
-app.post('/register', (req,res)=> {
+app.post('/register',  (req,res)=> {
     User.create(req.body.username, req.body.password, req.body.Email).then(()=>res.send("You just registered!")).catch(err=>console.log(err))
+    
 })
 
 app.get('/login', (req, res) => {
@@ -144,6 +146,27 @@ app.post('/me/delete/:id', (req, res) =>{
             res.redirect('/logout')
         })
     }
+})
+
+app.get('/account/settings', (req, res)=>{
+    if(!req.username) res.redirect('/login')
+    else{
+        User.find_by({username: req.username}).then((result)=>{
+            let user = result[0]
+            res.render('updateUser', {username: req.username, Email: user.Email})
+        }).catch(err=>console.log(err))
+    }
+})
+
+app.post('/account/settings', (req,res)=>{
+    User.find_by({username: req.username}).then((results)=>{
+        let user = results[0];
+        user.username = req.body.username;
+        user.Email = req.body.Email;
+        return user.update()
+    }).then(()=>{
+        res.send("User updated successfuly!")
+    }).catch(err=>console.log(err))
 })
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
